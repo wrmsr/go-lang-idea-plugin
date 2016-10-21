@@ -51,11 +51,11 @@ public class DlvVm extends VmBase {
     };
     vmHelper = new StandaloneVmHelper(this, commandProcessor, channel);
 
-    channel.pipeline().addLast(new JsonObjectDecoder(), new SimpleChannelInboundHandlerAdapter() {
+    channel.pipeline().addLast(new JsonObjectDecoder(50 * 1048576), new SimpleChannelInboundHandlerAdapter() {
       @Override
       protected void messageReceived(ChannelHandlerContext context, Object message) throws Exception {
         if (message instanceof ByteBuf) {
-          LOG.info("IN: " + ((ByteBuf)message).toString(CharsetToolkit.UTF8_CHARSET));
+          // LOG.info("IN: " + ((ByteBuf)message).toString(CharsetToolkit.UTF8_CHARSET));
           CharSequence string = ChannelBufferToString.readChars((ByteBuf)message);
           JsonReaderEx ex = new JsonReaderEx(string);
           getCommandProcessor().processIncomingJson(ex);
